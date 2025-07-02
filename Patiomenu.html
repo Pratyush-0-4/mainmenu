@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Patio Restaurant</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+
+    /* Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: Arial, sans-serif;
+      background: #fff8f0;
+      color: #333;
+      scroll-behavior: smooth;
+    }
+
+    /* Fullscreen Hero Section */
+    .hero-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: url('p2.jpg') no-repeat center center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+      will-change: opacity, transform;
+    }
+
+    .hero-overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 60px;
+      border-radius: 20px;
+      text-align: center;
+      color: white;
+      max-width: 500px;
+    }
+
+    .hero-overlay h1 {
+      font-size: 3rem;
+      font-family: 'Caveat', cursive;
+    }
+
+    .hero-overlay p {
+      font-size: 1.2rem;
+    }
+
+    .scroll-indicator {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: white;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    /* Spacer for main content under hero */
+    .main-spacer {
+      height: 100vh;
+    }
+
+    /* Main Content */
+    .main-content {
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .main-content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: white;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+
+    .logo-and-title {
+      display: flex;
+      align-items: center;
+    }
+
+    .restaurant-name {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      color: rgb(255, 139, 10);
+      margin: 0;
+    }
+
+    .hero-message {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(to right, #ffe0e0, #fff3e0);
+    }
+
+    .hero-message h2 {
+      color: rgb(255, 139, 10);
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    nav button {
+      background: rgb(255, 139, 10);
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 16px;
+      min-width: max-content;
+      flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+
+    nav button.active {
+      background: #cc0000;
+      font-weight: bold;
+    }
+
+    .menu-wrapper {
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .menu-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(45deg, #ffeb3b, #ffc107, #ff9800, #ff5722);
+      background-size: 400% 400%;
+      animation: gradientMove 10s ease infinite;
+      z-index: -1;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 15px;
+    }
+
+    .card-body h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .card-body p {
+      font-size: 14px;
+      margin: 0 0 10px;
+    }
+
+    .price {
+      color: rgb(255, 139, 10);
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #333;
+      color: white;
+      margin-top: 40px;
+    }
+
+    /* Optional: Fade in cards when scrolled into view */
+    .card {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen Hero Background -->
+  <div class="hero-section" id="heroSection">
+    <div class="hero-overlay">
+      <h1>Welcome to Patio Restaurant</h1>
+      <p>Delicious food made with love</p>
+      <div class="scroll-indicator">▼ Scroll Down ▼</div>
+    </div>
+  </div>
+
+  <!-- This pushes the main content below the hero -->
+  <div class="main-spacer"></div>
+
+  <!-- Main Content -->
+  <div class="main-content" id="mainContent">
+    <header>
+      <div class="logo-and-title">
+        <img src="pimg.jpg" alt="Restaurant Logo" class="logo">
+        <h1 class="restaurant-name">Patio Restaurant</h1>
+      </div>
+    </header>
+
+    <section class="hero-message">
+      <h2>Explore Our Menu</h2>
+    </section>
+
+    <nav id="categoryNav"></nav>
+
+    <div class="menu-wrapper">
+      <div class="menu-bg"></div>
+      <main class="menu" id="menuContainer"></main>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 Patio Restaurant. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    const hero = document.getElementById("heroSection");
+    const mainContent = document.getElementById("mainContent");
+
+    // Fade out hero on scroll
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.scrollY;
+
+      if (scrollTop > 0) {
+        const opacity = Math.max(0, 1 - scrollTop / 300);
+        hero.style.opacity = opacity;
+        hero.style.transform = `translateY(${Math.min(scrollTop / 2, 100)}px`;
+      }
+
+      if (scrollTop > 100 && !mainContent.classList.contains("visible")) {
+        mainContent.classList.add("visible");
+      }
+    });
+
+    // Fade in cards as you scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    function observeCards() {
+      document.querySelectorAll(".card").forEach(card => {
+        observer.observe(card);
+      });
+    }
+
+    const categories = [
+      "Breakfast",
+      "Indian cuisine",
+      "Beverages",
+      "Veg Starters",
+      "Nonveg Starters",
+      "Rice",
+      "Noodles",
+      "Local Favorites"
+    ];
+
+    const menuItems = {
+      "Breakfast": [
+        { name: "Taker's Delight", description: "A hearty breakfast platter with eggs, toast, bacon, and hash browns", price: "$9.99", image: "p1.png" },
+        { name: "Vegan Breakfast", description: "Plant-based breakfast with avocado toast, tofu scramble, and fruit", price: "$8.99", image: "p1.png" },
+        { name: "Creamy Oat Porridge", description: "Warm oatmeal served with honey, nuts, and berries", price: "$6.99", image: "p1.png" },
+        { name: "Muesli", description: "Classic Swiss muesli with fresh yogurt and seasonal fruits", price: "$7.49", image: "p1.png" },
+        { name: "Puri and Sabji", description: "Deep-fried puri served with spicy potato curry", price: "$5.99", image: "p1.png" },
+        { name: "Aloo Paratha", description: "Stuffed flatbread filled with spiced potatoes", price: "$4.99", image: "p1.png" },
+        { name: "Plain Omelet", description: "Simple three-egg omelet cooked to perfection", price: "$4.49", image: "p1.png" },
+        { name: "Cheese Omelet", description: "Three-egg omelet filled with melted cheese", price: "$5.49", image: "p1.png" },
+        { name: "Grilled Paneer Cheese Sandwich", description: "Toasty sandwich with paneer, veggies, and mayo", price: "$5.99", image: "p1.png" },
+        { name: "Chicken Cheese Sandwich", description: "Spicy chicken and cheese grilled sandwich", price: "$6.99", image: "p1.png" },
+        { name: "Chicken Sandwich", description: "Crispy chicken breast with lettuce, tomato, and mayonnaise", price: "$6.49", image: "p1.png" }
+      ],
+      // Keep other menu items unchanged
+    };
+
+    const categoryNav = document.getElementById("categoryNav");
+    const menuContainer = document.getElementById("menuContainer");
+    let activeButton = null;
+
+    categories.forEach(category => {
+      const btn = document.createElement("button");
+      btn.textContent = category;
+      btn.onclick = () => {
+        if (activeButton) activeButton.classList.remove("active");
+        btn.classList.add("active");
+        activeButton = btn;
+        showMenu(category);
+      };
+      if (category === "Breakfast") {
+        btn.classList.add("active");
+        activeButton = btn;
+      }
+      categoryNav.appendChild(btn);
+    });
+
+    function showMenu(category) {
+      menuContainer.innerHTML = "";
+      menuItems[category].forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <div class="card-body">
+            <h3>${item.name}</h3>
+            <p>${item.description}</p>
+            <div class="price">${item.price}</div>
+          </div>
+        `;
+        menuContainer.appendChild(card);
+      });
+      setTimeout(observeCards, 100);
+    }
+
+    function observeCards() {
+      document.querySelectorAll(".card").forEach(card => {
+        observer.observe(card);
+      });
+    }
+
+    // Show default menu
+    showMenu("Breakfast");
+  </script>
+</body>
+</html>
